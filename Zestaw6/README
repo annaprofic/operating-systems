@@ -1,0 +1,69 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw6
+
+=========================================================================================
+
+Katalog *Zestaw6* zawiera programy, napisane na podstawie 2 zadan.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make all
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+1) msg.c 	- Program zawierajacy podstawowe funkcje powiazane z wykorzystaniem 	
+		kolejek. Zawira w sobie funkcje: - tworzenia kolejki komunikatow, 
+		- usuwanie kolejki, 
+		- wysylanie komunikatu o podanych wlasnosciach (mtype), 
+		- pobieranie komunikatu w zaleznosci od mtype, 
+		- informacja dotyczajaca sie kolejki o podanym id.
+	
+Sklada sie:	_msg.c_ program glowny.
+		_libmsg.a_ biblioteka statyczna
+		_libmsg.so_ biblioteka dynamiczna 
+
+Kompilacja:	make all
+Uruchomic:	wykorzystuje sie razem z innym programem.
+_________________________________________________________________________________________
+
+2) serwer.c
+   klient.c  	- Program klient zawiera w sobie biblioteke pliku header, w ktorym jest 
+		zadeklarowana struktura, odpowiadajaca za kolejke. 
+		pierwszym argumentem jest mtype - wyrozniajacy typ komunikatu. 
+		drugim jest pid klienta i trzecim komunikat. 
+		Klient pobiera dane, ktore wpisuje uzytkownik z stdin i umieszcza do 
+		komunikatu. Typ ustalony na 1, bo procesu z takim PID nie bedzie istniec
+		w programie, poniewaz tym procesem jest init. 
+		Pobiera sie pid procesu klienta i zapisuje sie do drugiego argumentu 
+		struktury komunikatu. 
+		Po wysylaniu klient czeka na zwrot wiadomosci. 
+		Odbior klienta jest ustalony na typ - swoj PID. 
+		Serwer tym czasem czeka na wyslana przez klienta wiadomosc typu 1. 
+		otrzymujac ja on powieksza kazda litere.
+		Typ ustala sie na PID klienta ( przechowywany w strukturze ) i wysyla sie
+		kolejka komunikatu z powrotem do klienta. 
+		Dla przerwania petli serwera wystarczy wyslac sygnal SIGINT z klawiatury. 
+		(CTRL + C). 
+		
+Sklada sie:	_serwer.c_ program glowny odbiorcy.
+		_klient.c_ program glowny nadawcy.
+		
+
+Kompilacja:	make all
+Uruchomic:	./serwer.x
+		./klient.x
+_________________________________________________________________________________________
+

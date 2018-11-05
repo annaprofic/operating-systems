@@ -1,0 +1,168 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw1
+
+=========================================================================================
+
+Katalog *Zestaw1* zawiera programy, napisane na podstawie 6 zadan.
+
+=========================================================================================
+
+1) Kopiuj.c 	- Program ktory umozliwia kopiowanie zawartosci plikow.
+		W przypadku, gdy podany przez uzytkownika plik
+		jeszcze nie istnieje, program tworzy plik z podana
+		nazwa.
+
+Sklada sie:	_kopiuj.c_ program glowny.
+
+Kompilacja:	make
+Uruchomic:	./kopiuj.c ‘plik zrodlowy.rozszerz’ 'plik
+		docelowy.rozszerzenie’
+_________________________________________________________________________________________
+
+2) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+3) Procinfo.c
+   Procinfo.h 	- Program zawiera funkcje do wypisania informacji o
+		aktualnych procesach (Imie uzytkownika, User ID, Process
+		ID, Parent process ID, Group ID, Process group ID.)
+		Uzytkownik widzi na ekranie dane dotyczajace sie
+		tylko procesu, ktory istnieje w chwili kompilacji.
+		Pozniej dane moga sie zmienic.
+		Plik naglowkowy o rozszerzeniu ‘nazwa’.h miesci w sobie
+		opis interfejsu modulu, a w tym przypadku - deklaracje
+		funkcji.
+
+Sklada sie:	_procinfo.c_ program glowny.
+		_procinfo.h_ plik naglowkowy.
+
+Kompilacja:	make
+Uruchomic:	mozliwosc uruchamiania w nastepnym programie.
+_________________________________________________________________________________________
+
+4) Procesy.c 	- Program uzywa funkcji _procinfo.c_ wypisujac
+		informacje o procesie macierzystym uzytkownika.
+		Nastepnie tworzy i wypisuje potomkow procesu, uzywajac
+		f-cji fork(). Procesy potomne pojawiaja sie na ekranie
+		od najstarszego do najmlodszego przy uzyciu funkcji
+		sleep.
+
+*Ile procesow powstaje? (7 nowych procesow.)
+		
+
+Sklada sie:	_procesy.c_ program glowny.
+		_procinfo.c_ funkcja potrzebna do wypisywania danych na
+		ekran.
+		_procinfo.h_ plik naglowkowy dla funkcji.
+
+Kompilacja:	make
+Uruchomic:	./procesy.x
+_________________________________________________________________________________________
+
+5) Drzewko1.c
+   Drzewko2.c	- Programy tworza drzewko procesow potomnych dla procesu
+		macierzystego zgodnie z poleceniem:
+
+		- Drzewko nr 1 musi byc zbudowane w nastepny sposob:
+
+		|_
+		|_
+		|_
+		|
+
+		Polega to na tym ze jeden proces macierzysty tworzy 
+		trzy procesy potomnych. Przekanac sie mozna za pomoca 
+		identyfikatorow procesow potomnych o nazwie *child*. 
+		Kazdy z nich musi miec ten sam ID procesu macierzystego.
+	 	
+		Przyklad:
+		Process ID: 31179, Parent process ID: 30771,
+		Process ID: 31180, Parent process ID: 31179, 
+		Process ID: 31181, Parent process ID: 31179, 
+		Process ID: 31182, Parent process ID: 31179.
+
+		(31179)
+		|
+		|_(31180)
+		|
+		|_(31181)
+		|
+		|_(31182)
+		|
+
+*Ile procesow powstaje? (3 nowe procesy.)
+		
+		- Drzewko nr 2 musi byc zbudowane w nastepny sposob:
+		
+		|_ _ _
+		| | | |
+		|
+		|
+
+		Tworzenie tego drzewka polega na tworzeniu procesu
+		potomnego, ktory nastepnie tworzy proces potomny (w taki
+		sposob robiac sie jego procesem macierzystym, tworzac
+		nastepne “dziecko”). 
+
+		Przyklad:
+		Process ID: 31185, Parent process ID: 30771,
+		Process ID: 31186, Parent process ID: 31185, 
+		Process ID: 31187, Parent process ID: 31186, 
+		Process ID: 31188, Parent process ID: 31187.
+		
+		(31185)
+		|_____ _____ _____
+		|     |     |     |
+		|(31186) (31187) (31188)
+		|
+
+*Ile procesow powstaje? (3 nowe procesy.)
+
+Sklada sie:	_drzewko1.c_ program glowny.
+		_drzewko2.c_ program glowny.
+		_procinfo.c_ funkcja potrzebna do wypisywania danych na
+		ekran.
+		_procinfo.h_ plik naglowkowy dla funkcji.
+
+Kompilacja:	make
+Uruchomic:	./drzewko1.x
+		./drzewko2.x
+_________________________________________________________________________________________
+
+6) Macierzysty.c
+   Potomny.c 	- Program uruchamia prosecy za pomoca funkcji systemowej 
+		rodziny exec. Przy uzyciu tej funkcji odbywa sie system
+		call, ktory uruchamia inny program i juz nie wraca do
+		poprzedniego.
+		Wynikiem jest wypisywania ID prosecu macierzystego i 
+		stworzinych fork’iem procesow potomnych. 
+		Dziala to na tej samej podstawie, jak program drzewko1, 
+		poniewaz po przeniesieniu sie do programu *potomny.c* 
+		juz nie ma mozliwosci wrocic sie do defaulta, co 
+		uniemozliwia tworzenia nasteptych procesow potomnych.
+		
+*Ile procesow powstaje? (3 nowe procesy)
+
+Sklada sie:	_macierzysty.c_ program glowny od ktorego zaczynamy.
+		_potomny.c_ program glowny do ktorego sie przenosimy.
+		_procinfo.h_ plik naglowkowy.
+		_procinfo.c_ funkcja potrzebna do wypisywania danych na
+		ekran.
+
+Kompilacja:	make
+Uruchomic:	./macierzysty.x ./potomny.x
+_________________________________________________________________________________________

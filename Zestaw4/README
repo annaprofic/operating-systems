@@ -1,0 +1,69 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw4
+
+=========================================================================================
+
+Katalog *Zestaw4* zawiera programy, napisane na podstawie 3 zadan.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make all
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+1) sem.c 	- Program opisuje funkcje potrzebne do dzialania z semaforem.
+		Tworzy lub otzymuje dostep do klucza. 
+		Inicjalizuje semafor. 
+		Usuwa semafor. 
+		Opuszcza semafor. 
+		Podnosi semafor. 
+		Czeka na wyzerowanie semafora. 
+		Wypisuje informacje o wartosci semafora, liczbe czekujacych na opuszczenie
+		lub podniesienie procesow.
+	
+Sklada sie:	_sem.c_ program glowny.
+		_libsem.a_ biblioteka statyczna
+
+Kompilacja:	make all
+Uruchomic:	wykorzystuje sie razem z innym programem.
+_________________________________________________________________________________________
+
+2) semuse.c 	- Program uzywa biblioteke statyczna. 		
+		Przyjmujac jeden argument, ktory bedzie oznaczal odpowiednie dxialanie z
+		semaforem. 
+		
+Sklada sie:	_semuse.c_ program glowny.
+
+Kompilacja:	make all
+Uruchomic:	./semuse.x 'rodzaj akcji: (i, r, p, v, z, lub q)'
+_________________________________________________________________________________________
+
+3) prog.c 	
+   powielacz.c	- Program implementuje wzajemne wykluczenie dla procesow. 
+		powielacz.c wykorzystuje funkcje fork() do tworzenia procesow potomnych, 
+		odpowiednio do przekazanego argumentu. Przez funkcje systemowa exec
+		przechodzi do prog.c wykonujac odpowiednie dzialania na semaforach i 
+		informujac o stanie, wartosci semafora.
+		Tworzy i inicjalizuje semafor, pod koniec go usuwa. 
+   		
+Sklada sie:	_prog.c_ program glowny.
+		_powielacz.c_ program do powielania.
+
+Kompilacja:	make all
+Uruchomic:	./powielacz.x ./prog.x 'liczba procesow'
+_________________________________________________________________________________________
+
+

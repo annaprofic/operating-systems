@@ -1,0 +1,100 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw8
+
+=========================================================================================
+
+Katalog *Zestaw8* zawiera program, napisane na podstawie algorytmu Petersona.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make all
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+2) shemem.c 	- Program biblioteki dynamicznej. Zawiera w sobie podstatowe funkcje 
+		potrzebne dla roboty z pamiecia dzielona. 
+		Funkcja tworzaca pamiec dzielona, 
+		uzyskujaca dostep do pamieci dzielonej w razie gdy pamiec juz byla 			stworzona i identyfikujemy ja w innym programie, 
+		usuwanie pamieci dzielonej, 
+		dowiazywanie fragmentu do pamieci dzielonej pod jakis adres, 
+		usuwanie dowiazan, 
+		usuwanie pamieci dzilonej za pomoca sygnalu SIGINT.
+		
+Sklada sie:	_shmem.c_ program glowny.
+
+Kompilacja:	make all
+Uruchomic:	wykorzystuje sie razem z innym programem.
+_________________________________________________________________________________________
+
+
+2) pet.c
+   case.c  	-  Program pokazuje podstawowy algorymt wzajemnego wykluczania dla 
+		2 procesow. 
+		Algorytm Petersona – algorytm przetwarzania wspolbieznego, 
+		zapewniajacy wzajemne wykluczenie, umozliwiajace dwom procesom lub watkom 
+		bezkonfliktowy dostep do wspoldzielonego zasobu (sekcji krytycznej). 
+		Algorytm Petersona zapewnia wzajemne wykluczanie tylko dla dwoch procesow, 
+
+		Dla implementacji dzialania tego programu musimy wykorzystac pamiec 			dzielona. Rozmiar pamieci odpowiada rozmiaru struktury zmiennych. 
+		W takim przypadku procesy nie musza przekazywac miedzy soba dane, 
+		wystarczy tylko wpisac ich do pamieci dzielonej i procesy, majac do niej 
+		dostep automatycznie moga pobrac informacje zawierajaca sie w tej pamieci.
+
+		W pliku naglowkowym mamy deklaracje struktury z dla zniennych, 
+		dwie flagi, ktore wskazuja na to, czy proces chce wejsc do sekcji.
+
+		Najpierw musimy dowiazac semgent pamieci dzielonej do zmiennych. 
+		W petli, ktora powtarza sie 2 raz (ilosc procesow) tworzymy 
+		proces potomny. Przy powodzeniu musimy przekazac dane do programu case.c
+		Zeby to zrobic musimy miec tablice char process[2], ktora bedzie 
+		zawierac w sobie numer procesu, wiec zamieniamy int w char za pomoca 
+		ANCII code dopisujac + '0' do int-ego numeru procesu.
+		Przez execa wchodzimy do case.c 
+		Funkcja atoi teraz moze zamienic tablice char w int. 
+		i - jest teraz numerem procesu. 
+
+		j - jest zmienna ktora odpowiada przeciwnemu procesowi:
+		i = 0; j = 1;
+		i = 1; j = 0; 
+ 		
+		Petla do - while zawsze bedzie wykonywala warunek. 
+		Najpierw ustalamy proces, ktory bedzie chcial wejsc do sekcji krytycznej.
+		Od razu po tym ustalany proces przeciwny, jako  nastepny w kolei do sekcji
+		krytycznej. 
+		To robimy zeby uniknac zaglodzenia procesow. 
+		Porzadek jest wazny, bo inny moze sprawic sytuacje, gdy zaden z procesow 
+		nie wejdzie, albo wejdzie i 1 i 2 proces na raz. 
+		
+		Petla while pokazuje ze jezeli proces j chce wejsc do sekcji to czeka, 			kiedy sekcja bedzie wolna. 
+
+		Po zwolnieniu sekcji krytycznej flaga zmienia sie na FALSE - co oznacza, 
+		ze proces zmienia swoj status i przechodzi do sekcji prywatnej. 
+		
+		Dla przerwania programu  wystarczy wyslac sygnal SIGINT z klawiatury. 
+		(CTRL + C). Funkcja, ktora usuwa pamiec dzielona tez znajduje sie w 
+		wlasnej funkcji przerwania. 
+
+		Algorytm Petersona zapewnia wzajemne wykluczanie, brak zaglodzenia 
+		oraz zakleszczenia.
+		
+Sklada sie:	_pet.c_ program glowny odbiorcy.
+		_case.c_ program glowny nadawcy.
+		
+
+Kompilacja:	make all
+Uruchomic:	./pet.x
+_________________________________________________________________________________________
+

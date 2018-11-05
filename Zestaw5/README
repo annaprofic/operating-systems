@@ -1,0 +1,138 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw5
+
+=========================================================================================
+
+Katalog *Zestaw5* zawiera programy, napisane na podstawie 3 zadan.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make all
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+1) sem.c 	- Program opisuje funkcje potrzebne do dzialania z semaforem.
+		Tworzy lub otzymuje dostep do klucza. 
+		Inicjalizuje semafor. 
+		Usuwa semafor. 
+		Opuszcza semafor. 
+		Podnosi semafor. 
+		Czeka na wyzerowanie semafora. 
+		Wypisuje informacje o wartosci semafora, liczbe czekujacych na 
+		opuszczenie
+		lub podniesienie procesow.
+	
+Sklada sie:	_sem.c_ program glowny.
+		_libsem.a_ biblioteka statyczna
+
+Kompilacja:	make all
+Uruchomic:	wykorzystuje sie razem z innym programem.
+_________________________________________________________________________________________
+
+2) shemem.c 	- Program biblioteki dynamicznej. Zawiera w sobie podstatowe funkcje 
+		potrzebne dla roboty z pamiecia dzielona. 
+		Funkcja tworzaca pamiec dzielona, 
+		uzyskujaca dostep do pamieci dzielonej w razie gdy pamiec juz byla 			stworzona i identyfikujemy ja w innym programie, 
+		usuwanie pamieci dzielonej, 
+		dowiazywanie fragmentu do pamieci dzielonej pod jakis adres, 
+		usuwanie dowiazan, 
+		sprawdzanie rozmiaru pamieci dzielonej, 
+		informacja.
+		
+Sklada sie:	_shmem.c_ program glowny.
+
+Kompilacja:	make all
+Uruchomic:	wykorzystuje sie razem z innym programem.
+_________________________________________________________________________________________
+
+3) shmuse.c 	- Program zarzadza pamiecia dzielona, wykorzystuje funkcje z biblioteki 
+		dynamicznej. 
+		rodzaje akcji przy kompilacji:
+		c size - tworzenie pamieci o rozmiarze size, jezeli size nie podany 
+		to pamiec zostaje stworzona o domyslnym rozmiarze podanym w kodzie. 
+		d - usuwanie segmentu pamieci. 
+		r - wypisuje zawartosc pamieci na stdin. 
+		w < input.txt - przekierowanie zawartosci pliku na standartowe wejscie 
+		i pobieranie tej zawartosci do pamieci dzieloniej. 
+		i - informacja o pamieci. 
+		nie podajac zadnego rodzaju uzytkownik zastanie proinformowany o 
+		uzyciu tego programu.  
+		
+Sklada sie:	_shmuse.c_ program glowny.
+
+Kompilacja:	make all
+Uruchomic:	./shmuse.x 'rodzaj akcji'
+_________________________________________________________________________________________
+
+3) producent.c	- Inicjalizuje strukture bufora, zawiaracaja rozmiar i dane. 
+		Otwiera plik z ktorego beda pobierane dane do przeniesienia w showek. 
+		Po uzyskaniu dostepu do pamieci dzielonej  program dowiazuje fragment 
+		(bufor) do segmentu pamieci dzielonej. 
+		W takim przypadku procesy nie musza przekazywac miedzy soba dane, 
+		wystarczy tylko wpisac ich do pamieci dzielonej i procesy, majac do niej 
+		dostep automatycznie maga pobrac informacje zawierajaca sie w tej pamieci. 
+		Pobierajac dane z pliku magazyn.txt za pomaca synchronizacja procesow
+		wykonujemy wpisywanie danych. 
+		semafor ma początkową wartosc MAX, zatem mozna wykonac MAX operacji 
+		zapisu, zapelnic calkowicie bufor, którego rozmiar jest równy MAX. 
+		semafor osiagnie tym samym wartosc 0 i przy kolejnym obrocie petli 			nastapi zablokowanie procesu 
+        	w operacji opuszczania tego semafora, az do momentu podniesienia 
+		go przez inny proces. 
+		bedzie to proces konsumenta (odczytujacy). 
+		semafor nr 1 blokuje konsumenta przed dostepem do pustego bufora. 
+
+
+Sklada sie:	_producent.c_ program glowny.
+		
+Kompilacja:	make all
+Uruchomic:	przy urucham. ./glowny.x za pomoca exec 
+_________________________________________________________________________________________
+
+3) konsument.c	- Inicjalizuje strukture bufora, zawiaracaja rozmiar i dane. 
+		Otwiera plik do ktorego beda pobierane dane. 
+		Po uzyskaniu dostepu do pamieci dzielonej  program dowiazuje fragment 
+		(bufor) do segmentu pamieci dzielonej. Tym samym proces juz ma dostep 
+		do danych wyslanych przez konsumenta. 
+		semafor nr 0 po odczytaniu pliku ma zapelniony bufor, 
+		ktorego rozmiar jest rowny MAX. ]
+		po skonczeniu petli producenta semafor jest w stanie zablokowanym, 	
+		poki inny proces w petli go nie odblokuje. 
+		Program wpisuje dane do schowka. 
+
+
+
+Sklada sie:	_konsument.c_ program glowny.
+		
+Kompilacja:	make all
+Uruchomic:	przy urucham. ./glowny.x za pomoca exec 
+_________________________________________________________________________________________
+3) glowny.c	- inicjalizuje strukture bufora, zawiaracaja rozmiar i dane. 
+		Tworzy pamiec dzielona i 2 semafory ( poczatkowy semafor = MAX rozmiar, 
+		i semafor ktory otrzymuje 0. 
+		Przez proces potomny mozemy przeniesc sie do programu producenta. 
+		Po zakonczeniu programu producenta proces tworzy drugi proces potomny
+		dla programu konsumenta, przez exec przekierowuje sie do niego. 
+		Poznej proces macierzysty musi czekac az procesy potomne ( prodecent 
+		i konsument) skacza swoje dzialanie. 
+		Program moze porownywac pliki magazyn i schowek. 
+
+
+Sklada sie:	_glowny.c_ program glowny.
+		
+Kompilacja:	make all
+Uruchomic:	./glowny.x _________________________________________________________________________________________
+
+

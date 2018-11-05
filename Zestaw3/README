@@ -1,0 +1,58 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw3
+
+=========================================================================================
+
+Katalog *Zestaw3* zawiera programy, napisane na podstawie 2 zadan.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make all
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+1) prodkons.c 	- Program implementuje problem *producenta i konsumenta* za pomoca potokow 
+		nienazwanych.
+		Prodecent i konsument to sa procesy danego programu. 
+		W pliku 'magazyn.txt' podany "surowiec". Konsument pobiera surowiec i 
+		umieszcza go do potoku za pomoca funkcji pipe(). Poznej wstawia pobrany 
+		towar w pliku 'schowek.txt'
+		Predkosc pobierania zalezy od funkcji usleep() ktora ma w sobie 
+		funkcje generatowania liczb randomowych. 
+		Na koncu program sprawdza identycznosc plikow. 
+	
+Sklada sie:	_prodkons.c_ program glowny.
+
+Kompilacja:	make all
+Uruchomic:	./prodkons.x _________________________________________________________________________________________
+
+2) fifo.c 	- Program podobnie implementuje problem *producenta i konsumenta* ale za
+		pomoca potokow nazwanych. Czyli potok sam tworzy wskazany plik. 
+		Prodecent i konsument - 2 osobne programy, ktore wywoluja sie w fifo.c 
+		przy pomocy funkcji systemowej rodziny exec.  
+		
+* Akronim FIFO - "first in, first out".
+* Usuwanie potoku nazwanego - funkcja unlink() z poziomu programu.
+
+		
+Sklada sie:	_fifo.c_ program glowny.
+		_konsument.c_ program ktory wywoluje funkcje konsument.
+		_producent.c_ program ktory wywoluje funkcje producent.
+
+Kompilacja:	make all
+Uruchomic:	./fifo.x lub ./fifo.x 'nazwa potoku'
+_________________________________________________________________________________________
+

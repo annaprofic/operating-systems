@@ -1,0 +1,106 @@
+=========================================================================================
+
+																Anna Sarnavska
+																    Zestaw2
+
+=========================================================================================
+
+Katalog *Zestaw2* zawiera programy, napisane na podstawie 4 zadan.
+
+=========================================================================================
+
+0) Makefile 	- Plik regul, ktory autoryzuje proces kompilacji,
+		i linkowania  w przypadku, gdy potrzebujemy uzyc
+		wiekszej ilosci modulow.
+		Zawiera reguly kompilacji - opis zaleznosci pomiedzy
+		plikami zrodlowymi. Makefile umozliwia uruchamianie
+		kazdego programu katalogu za pomoca domyslnej reguly
+		*all*. Takze ma mozliwosc usuwania plikow tymczasowych
+		i niepotrzebnych.
+
+Sklada sie:	_Makefile_ glowny plik regul.
+
+Kompilacja:	make
+Czyszczenie:	make clean
+_________________________________________________________________________________________
+
+1) Obsluga.c 	- Program obsluguje sygnaly podane przez uzytkownika przy kompilacji. 
+		Mozliwosci obslugi (przechwycenie, ignorowanie lub domyslna operacja) 
+		program przyjmuje jako pierwszy wpisany argument,
+		a numer sygnalu jako drugi. 
+		Funkcje signal wykorzystujemy dla modyfikacji sposobu, w jaki proces
+		reaguje na podany sygnal. 
+
+* Signal() - instaluje nowa obsluge sygnalu, SIG_IGN, SIG_DFL, lub funkcja podana przez uzytkownika. 
+Niemowliwe jest przechwycenie lub ignorowanie sygnalow SIGSTOP lub SIGKILL
+	
+Sklada sie:	_obsluga.c_ program glowny.
+
+Kompilacja:	make
+Uruchomic:	./obsluga.x 'rodzaj akcji: ('d','i' lub 'p')' 'numer sygnalu'
+		d - wykonanie domyslnej operacji sygnalu
+		i - ignorowanie sygnalu
+		p - przechwycenie i wykonanie wlasnej operacji
+_________________________________________________________________________________________
+
+2) Wysylaj.c 	- Program od procesu macierzystego tworzy proces potomny. Za pomoca 
+		funkcji systemowej rodziny exec, program przenosi sie do obsluga.x, 
+		nastepnie program sprawdza czy proces istneje za pomoca funkcji kill().
+
+* Do czego sluzy kill? wysylania sygnalow do procesow lub do ich grup.
+
+* Pierwszy argument okresla proces ( proces id ), lub procesy, co naleza do tej samej 
+grupy co i proces wysylajacy sygnal ( wtedy wartosc rowna 0 ). 
+Moga tez byc procesy nalezacy do grupy o pewnym Group id = - process id. 
+
+		Jesli istneje - wysylamy do niego sygnal, przyjmowany jako drugi argument 
+		programu. Po obsludze sygnalu program sie konczy.
+
+Sklada sie:	_wysylaj.c_ program glowny.
+
+Kompilacja:	make
+Uruchomic:	./wysylaj.x 'rodzaj akcji: ('d','i' lub 'p')' 'numer sygnalu'
+		d - wykonanie domyslnej operacji sygnalu
+		i - ignorowanie sygnalu
+		p - przechwycenie i wykonanie wlasnej operacji
+_________________________________________________________________________________________
+
+3) Grupa.c 	- Program, co za pomoca funkcji fork tworzy pewna okreslana ilosc prosecow 
+		potomnych - kopii procesu macierzystego. 
+		Przy wykorzystaniu systemowej funkcji rodziny exec program wykonuje 
+		obsluge sygnalu, przyjmujac informacje o akcji ( mozliwosci obslugi ) od 
+		uzytkownika. Nastepnie funkcja kill() sprawdza czy proces istneje, w 
+		jesli istneje - wysyla sygnaly do calej grupy procesow, oprocz 
+		macierzystego. 
+
+Sklada sie:	_grupa.c_ program glowny.
+
+Kompilacja:	make
+Uruchomic:	./grupa.x 'rodzaj akcji: ('d','i' lub 'p')' 'numer sygnalu'
+		d - wykonanie domyslnej operacji sygnalu
+		i - ignorowanie sygnalu
+		p - przechwycenie i wykonanie wlasnej operacji
+_________________________________________________________________________________________
+
+*SIGCHLD(17) 	- Sygnal wysylany do procesu macierzystego, gdy zakonczy sie dzialanie 
+		procesu potomnego. Zmiana stanu moze oznaczac jego smierc, ale moze 
+		tez wynikac z zatrzymania tego procesu przez sygnaly SIGSTOP, SIGTTOUT, 
+		lub SIGTSTP. 
+		Domyslnie ignorowany. 
+*SIGCONT(18)	- Wznowienie wstrzymanego procesu. Jest wysylany, kiey w systemie
+		podejmuje sie dalszy ciag dzialania procesu, ktory zostal wstrzymany. 
+		Domyslnie ignorowany.
+
+*Skroty klawiszowe: 
+
+*SIGINT 
+[CTRL-C]	- Przerwanie. Domyslnie: zakonczenie. 
+
+*SIGQUIT
+[CTRL-\]	- Wyjscie. Domyslnie: zakonczenie, zrzut pamieci.
+
+*SIGTSTP
+[CTRL-Z]	- Zatrzymanie. Domyslnie: zatrzymanie procesu. 
+
+__________________________________________________________________________________________
+
